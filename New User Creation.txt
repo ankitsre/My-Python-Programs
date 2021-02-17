@@ -1,0 +1,79 @@
+user=input('Enter Username of atleast length 4\t')
+d=a=u=s=l=sp=0
+w="@#$%^&*_><?/"
+cnt = 0
+default = ''
+pwd1 = ''
+
+for i in range(6):
+    if len(user) < 4:
+        print('Userid should be of length 4 or more')
+        print(6 - i, ' Attempts remaining')
+        user = input('Renter Userid:')
+    if i == 5 and len(user) < 4:
+        print('Session Expire')
+        break
+    if len(user) >= 4:
+        default = 'success'
+for i in range(6):
+    cnt = cnt + 1
+    d=a=u=s=l=sp=0
+    pwd=input('Now Set your passowrd\t') 
+    for c in pwd:
+        if c.isdigit():
+            d=d+1
+        elif c.isalpha():
+            a=a+1
+            if c.isupper():
+                u=u+1
+            elif c.islower():
+                l=l+1    
+        elif c in w:
+             s=s+1      #127377057
+        elif c.isspace():
+             sp=sp+1    
+        else:
+            pass
+    if sp>0:
+        print("Invalid pasword space not allowed")
+    if d<1:
+        print("invalid password atleast one  digit needed")
+
+    if a==0:
+        print("Invalid pasword atleast one alpahabet needed")
+    if u==0:
+        print("INVALID password atleast  one in uppercase")
+    if l==0:
+        print("INVALID password atleast  one in lowercase")
+    if s==0:
+        print("INVALID password atleast one  special character")
+    if len(pwd)<10:
+        print("INVALID MINIMUM LENGTH SHOULD BE 9")
+    if cnt == 4:
+        print('You have exhausted maximum attempts')
+        break
+    if d >0 and sp ==0 and a > 0 and u > 0 and l > 0  and s > 0 and len(pwd) >= 10 :
+        print("Congratulations!! Welcome to our platform. Please login to continue****")
+        pwd1 = 'success'
+        break
+
+        
+
+for i in range(4):
+    
+    if pwd1 == 'success':
+        u = input('Userid:')
+        if u==user:
+            p = input('Enter Password:')
+            if p ==pwd:
+                Name = input('Enter your Name:')
+                Age = input('Enter your age')
+                Gender = input('Enter your gender')
+                break
+                        
+            else:
+                print('Wrong Password!Try Again')
+        else:
+            print('Userid does not exist!try again')        
+                
+        
