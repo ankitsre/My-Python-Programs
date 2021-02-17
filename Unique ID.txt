@@ -1,0 +1,63 @@
+#While doing customer analytics and taking data from multiple sources,one of the problem encountered is 
+#that there are often manay to many relationships akin to a scenario on facebook where a is friend of b and b is friend of c
+#so, facebook recommends c to be-friend with a. This program makes an attempt to identify all the linkages and accord same 
+#unique identifier to a relationship
+
+
+
+
+####Importing file and cleaning it for using in a list form
+import time
+str_time = time.time()
+import pandas as pd
+import numpy as np
+df = pd.read_excel('C:\\Users\\ankit127506\\Desktop\\Combined2.xlsx')
+df.drop('Unnamed: 2' , axis = 1 , inplace = True)
+df.sort_values(['CID' , 'CID1'], inplace  = True)
+df.dropna(inplace = True)
+l_CID = list(df['CID'])
+l_CID1 = list(df['CID1'])
+np.random.seed(1)
+rd = np.random.randint(0,1000,len(l_CID))
+UID = []
+
+####Creating a new list for unique identifier for the relationships
+for i in range(len(l_CID)):
+    UID.append('sid'+str(rd[i]))
+
+
+###start modifying unique id for each identified linkages
+de = {}
+for i in range(len(l_CID)):
+    if l_CID[i] in l_CID[0:i]:
+        UID[i] = UID[l_CID.index(l_CID[i], 0,i)]  
+    de[UID[i]] = [l_CID[i]] 
+
+####merge the unique id by checking all possible linkages and updating as we encounter new linkage
+for i in range(len(l_CID)):
+    if l_CID1[i] in l_CID1[0:i]:
+        a = l_CID[l_CID1.index(l_CID1[i], 0,i)]
+        b = UID[i]
+        c = l_CID[i]
+        
+        for k in de.keys():
+            if a in de[k] and k !=b:
+                de[b].extend(de[k])
+                de[k] = 'a'   
+                
+###Sepearate UID created so that it can be merged with the original df
+UID_L = []
+for i in range(len(l_CID)):
+    for j in de.keys():
+        if l_CID[i] in de[j]:
+            UID_L.append(j)
+
+
+
+Final_File = pd.DataFrame(zip(l_CID, l_CID1, UID, UID_L) , columns = ['ID1' , 'ID2' , 'Regular_Unique' , 'Final_Unique']) 
+end_time = time.time()
+print('Total time Taken:',(end_time-str_time))
+Final_File
+
+
+####this code as n2 complexity. Hence with more than 1 mn rows
